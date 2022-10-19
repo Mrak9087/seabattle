@@ -1,0 +1,9 @@
+.fieldTable {
+  border: 1px solid #000;
+  border-collapse: collapse;
+}
+
+.fieldTable td {
+  border: 1px solid #000;
+  background-color: #ccc;
+}
