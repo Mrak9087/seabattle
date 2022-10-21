@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
-import BattleFieldTable from './components/BattleFieldTable';
+import BattleField from './components/BattleField';
 
 function App() {
   return (
     <div className="App">
-      <BattleFieldTable />
+      <BattleField />
     </div>
   );
 }
