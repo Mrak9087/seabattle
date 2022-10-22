@@ -1,21 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { shipList } from '../helpers/constants';
 import { isShipToField } from '../helpers/helpers';
 import { IShip } from '../helpers/types';
 
-const initialStateBase = [
-  { id: 41, x: 0, y: 0, size: 4, dir: 'row', placed: false },
-  { id: 31, x: 0, y: 0, size: 3, dir: 'row', placed: false },
-  { id: 32, x: 0, y: 0, size: 3, dir: 'row', placed: false },
-  { id: 21, x: 0, y: 0, size: 2, dir: 'row', placed: false },
-  { id: 22, x: 0, y: 0, size: 2, dir: 'row', placed: false },
-  { id: 23, x: 0, y: 0, size: 2, dir: 'row', placed: false },
-  { id: 11, x: 0, y: 0, size: 1, dir: 'row', placed: false },
-  { id: 12, x: 0, y: 0, size: 1, dir: 'row', placed: false },
-  { id: 13, x: 0, y: 0, size: 1, dir: 'row', placed: false },
-  { id: 14, x: 0, y: 0, size: 1, dir: 'row', placed: false },
-];
+const initialStateBase = shipList.slice(0);
 
-const ship = createSlice({
+export const shipStore = createSlice({
   name: 'ship',
   initialState: initialStateBase,
   reducers: {
@@ -31,3 +21,6 @@ const ship = createSlice({
     },
   },
 });
+
+
+export default shipStore.reducer;

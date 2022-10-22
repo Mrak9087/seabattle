@@ -1,0 +1,5 @@
+.ship {
+    position: absolute;
+    border: 3px solid #0c0aa4;
+    background-color: #2093df;
+}
