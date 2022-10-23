@@ -1,20 +1,16 @@
-import { useSelector } from 'react-redux';
-import { RootStore } from '../../store/store';
+import {FC, LegacyRef, MutableRefObject, Ref} from "react";
 import BattleFieldTable from '../BattleFieldTable';
-import Dock from '../Dock';
-import DraggedShip from '../DraggedShip';
 
-const BattleField = () => {
-  const store = useSelector((state:RootStore)=> state.shipStore);
+interface IBattleField {
+  itemRef?:MutableRefObject<HTMLElement | null>;
+  children?: React.ReactNode;
+}
 
+const BattleField:FC<IBattleField> = ({itemRef,children}) => {
   return (
-    <div className='battleField'>
+    <div className="battleField" ref={itemRef as LegacyRef<HTMLDivElement>}>
       <BattleFieldTable />
-      <Dock> 
-        {store.filter((ship) => !ship.placed).map((ship, idx) => {
-          return <DraggedShip key={idx} ship={ship}/>
-        })}
-      </Dock>
+      {children}
     </div>
   );
 };

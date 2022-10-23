@@ -6,3 +6,9 @@ export interface IShip {
   dir: string;
   placed: boolean;
 }
+
+export interface IShipDrop {
+  id: number;
+  x: number;
+  y: number;
+}

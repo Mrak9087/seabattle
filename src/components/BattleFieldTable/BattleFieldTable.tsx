@@ -4,11 +4,16 @@ const BattleFieldTable = () => {
   return (
     <table className="fieldTable">
       <tbody>
-        {matrix.map((tr) => {
+        {matrix.map((tr,rIdx) => {
           return (
-            <tr>
-              {tr.map(() => {
-                return <td style={{width:'30px', height:'30px'} as React.CSSProperties}></td>;
+            <tr key={rIdx}>
+              {tr.map((i, idx) => {
+                return (
+                  <td
+                    key={idx}
+                    style={{ width: '30px', height: '30px' } as React.CSSProperties}
+                  ></td>
+                );
               })}
             </tr>
           );
