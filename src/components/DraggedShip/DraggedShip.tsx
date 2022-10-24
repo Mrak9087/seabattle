@@ -7,9 +7,10 @@ import './draggedShip.css';
 
 interface IDraggedShip {
   ship: IShip;
+  rotate: (id:number) => void;
 }
 
-const DraggedShip: FC<IDraggedShip> = ({ ship }) => {
+const DraggedShip: FC<IDraggedShip> = ({ ship, rotate }) => {
   const refDrag = useRef(null);
 
   const shipWidth = useMemo(() => {
@@ -32,6 +33,10 @@ const DraggedShip: FC<IDraggedShip> = ({ ship }) => {
 
   dragRef(refDrag);
 
+  const handleClick = () => {
+    rotate(ship.id);
+  }
+
   return (
     <div
       ref={refDrag}
@@ -44,6 +49,7 @@ const DraggedShip: FC<IDraggedShip> = ({ ship }) => {
           left: `${ship.x * CELL_SIZE}px`,
         } as React.CSSProperties
       }
+      onClick={handleClick}
     ></div>
   );
 };
