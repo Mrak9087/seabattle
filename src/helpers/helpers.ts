@@ -1,3 +1,4 @@
+import { shipList } from './constants';
 import { IShip } from './types';
 
 export const isValid = (coord: number): boolean => {
@@ -16,18 +17,16 @@ export const isShipToField = (newShip: IShip, ships: IShip[]): boolean => {
     const dy = ship.dir === 'col' ? 1 : 0;
     for (let y = ship.y - 1; y <= ship.y + ship.size * dy + dx; y++) {
       if (!isValid(y)) {
-        continue
-      };
+        continue;
+      }
       for (let x = ship.x - 1; x <= ship.x + ship.size * dx + dy; x++) {
         if (!isValid(x)) {
-          continue
-        };
+          continue;
+        }
         matrix[y][x] = 1;
       }
     }
   });
-
-  console.log(matrix);
 
   const dx = newShip.dir === 'row' ? 1 : 0;
   const dy = newShip.dir === 'col' ? 1 : 0;
@@ -40,4 +39,24 @@ export const isShipToField = (newShip: IShip, ships: IShip[]): boolean => {
     }
   }
   return true;
+};
+
+export const randomizeShips = () => {
+  const locShips = shipList.slice(0);
+  for (let i = 0; i < locShips.length; i++) {
+    const newShip = { ...locShips[i] };
+    while (!newShip.placed) {
+      newShip.x = Math.floor(Math.random() * 10);
+      newShip.y = Math.floor(Math.random() * 10);
+      newShip.dir = ['row', 'col'][Math.floor(Math.random() * 2)];
+      newShip.placed = true;
+      const placedShips = locShips.filter((ship) => ship.placed);
+      if (!isShipToField(newShip, placedShips)) {
+        newShip.placed = false;
+      } else {
+        locShips[i] = { ...newShip };
+      }
+    }
+  }
+  return locShips;
 };

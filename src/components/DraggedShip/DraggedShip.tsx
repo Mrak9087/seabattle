@@ -7,7 +7,7 @@ import './draggedShip.css';
 
 interface IDraggedShip {
   ship: IShip;
-  rotate: (id:number) => void;
+  rotate: (id: number) => void;
 }
 
 const DraggedShip: FC<IDraggedShip> = ({ ship, rotate }) => {
@@ -23,19 +23,19 @@ const DraggedShip: FC<IDraggedShip> = ({ ship, rotate }) => {
     return dirY * (ship.size - 1) * CELL_SIZE + CELL_SIZE;
   }, [ship.dir]);
 
-  const [{isDragging},dragRef] = useDrag({
+  const [{ isDragging }, dragRef] = useDrag({
     type: 'ship',
     item: ship,
     collect: (monitor) => ({
-      isDragging: monitor.isDragging
-    })
-  })
+      isDragging: monitor.isDragging,
+    }),
+  });
 
   dragRef(refDrag);
 
   const handleClick = () => {
     rotate(ship.id);
-  }
+  };
 
   return (
     <div

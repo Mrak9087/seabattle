@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { shipList } from '../helpers/constants';
-import { isShipToField } from '../helpers/helpers';
+import { isShipToField, randomizeShips } from '../helpers/helpers';
 import { IShip, IShipDrop } from '../helpers/types';
 
 const initialStateBase = {
@@ -35,7 +35,6 @@ export const shipStore = createSlice({
     rotate(state, action: PayloadAction<number>) {
       const shipIdx = state.ships.findIndex((item) => item.id === action.payload);
       const newShip = state.ships[shipIdx];
-      // const locDir = newShip.dir;
       newShip.dir = newShip.dir === 'row' ? 'col' : 'row';
       const {x,y,dir} = shipList[shipIdx];
       if (newShip.placed) {
@@ -51,11 +50,14 @@ export const shipStore = createSlice({
         }
       }
       
+    },
+    randomPosition(state) {
+      state.ships = randomizeShips();
     }
   },
 });
 
 
-export const {placed, rotate} = shipStore.actions
+export const {placed, rotate, randomPosition} = shipStore.actions
 
 export default shipStore.reducer;

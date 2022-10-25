@@ -5,8 +5,9 @@ import BattleField from '../../components/BattleField';
 import Dock from '../../components/Dock';
 import DraggedShip from '../../components/DraggedShip';
 import { CELL_SIZE } from '../../helpers/constants';
+import { randomizeShips } from '../../helpers/helpers';
 import { IShip, IShipDrop } from '../../helpers/types';
-import { placed, rotate } from '../../store/shipStore';
+import { placed, randomPosition, rotate } from '../../store/shipStore';
 import { RootStore } from '../../store/store';
 
 const Editor = () => {
@@ -39,10 +40,6 @@ const Editor = () => {
           (mouseFinish.y - rect.top - mouseStart.y + shipStart.y + CELL_SIZE / 2) / CELL_SIZE
         );
 
-        console.log([x,y])
-
-        // item.x = x;
-        // item.y = y;
         const shipDrop:IShipDrop = {
           id:item.id,
           x,
@@ -60,6 +57,10 @@ const Editor = () => {
     dispatch(rotate(id))
   }
 
+  const handleRandom = () => {
+    dispatch(randomPosition())
+  }
+
   return (
     <div className="editor">
       <BattleField itemRef={refField}>
@@ -72,6 +73,7 @@ const Editor = () => {
             return <DraggedShip key={ship.id} ship={ship} rotate={shipRotate}/>;
           })}
       </Dock>
+      <button onClick={handleRandom}>Random</button>
     </div>
   );
 };
