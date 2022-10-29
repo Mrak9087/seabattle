@@ -26,7 +26,7 @@ export const gameStore = createSlice({
         return;
       }
       
-      addShoot(state.shipsPlayer, state.shootsPlayer, action.payload)
+      addShoot(state.shipsBot, state.shootsBot, action.payload)
     },
   },
 });

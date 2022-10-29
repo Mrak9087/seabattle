@@ -9,16 +9,16 @@ interface IShootView {
 }
 
 const Shoot = ({ shoot }: IShootView) => {
+  const shootChar = useMemo(() => {
+    if (shoot.state === EShoot.HIT) {
+      return <>&#10006;</>;
+    }
+    return <>&bull;</>;
+  }, []);
 
-    const shootChar = useMemo(()=>{
-      if (shoot.state === EShoot.HIT) {
-        return <>&#10006;</>;
-      }
-      return <>&bull;</>;
-    },[])
   return (
     <div
-      className="shoot"
+      className={`shoot ${shoot.state === EShoot.HIT ? 'hit' : ''}`}
       style={
         {
           width: `${CELL_SIZE}px`,

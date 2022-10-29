@@ -64,17 +64,6 @@ const Editor = () => {
     dispatch(randomPosition())
   }
 
-  const clickCell = (x:number, y:number) => {
-    const id = (game.shootsPlayer.length + 1)  * 10;
-    const newShoot: IShoot = {
-      id,
-      x,
-      y,
-      state:EShoot.MISS
-    }
-    dispatch(shoot(newShoot))
-  }
-
   return (
     <div className="editor">
       <BattleField itemRef={refField}>

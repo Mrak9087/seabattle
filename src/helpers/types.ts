@@ -5,6 +5,7 @@ export interface IShip {
   size: number;
   dir: string;
   placed: boolean;
+  countHitDecks: number;
 }
 
 export interface IShipDrop {

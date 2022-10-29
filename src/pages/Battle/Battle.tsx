@@ -1,0 +1,53 @@
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import BattleField from '../../components/BattleField';
+import ShipView from '../../components/ShipView';
+import Shoot from '../../components/Shoot';
+import { EShoot, IShoot } from '../../helpers/types';
+import { shoot, start } from '../../store/gameStore';
+import { randomPosition } from '../../store/shipStore';
+import { RootStore } from '../../store/store';
+
+const Battle = () => {
+  const store = useSelector((state: RootStore) => state);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(randomPosition());
+  }, []);
+
+  useEffect(() => {
+    dispatch(start(store.shipStore.ships));
+  }, [store.shipStore.ships]);
+
+  const clickCell = (x: number, y: number) => {
+    const id = (store.gameStore.shootsPlayer.length + 1) * 10;
+    const newShoot: IShoot = {
+      id,
+      x,
+      y,
+      state: EShoot.MISS,
+    };
+    dispatch(shoot(newShoot));
+  };
+
+  return (
+    <div className="editor">
+      <BattleField>
+        {store.shipStore.ships.map((ship) => {
+          return <ShipView key={ship.id} ship={ship} />;
+        })}
+      </BattleField>
+      <BattleField handleClick={clickCell}>
+        {store.gameStore.shipsBot.filter((ship) => ship.size === ship.countHitDecks).map((shipV) => {
+          return <ShipView key={shipV.id} ship={shipV}/>;
+        })}
+        {store.gameStore.shootsBot.map((shoot) => {
+          return <Shoot key={shoot.id} shoot={shoot} />;
+        })}
+      </BattleField>
+    </div>
+  );
+};
+
+export default Battle;

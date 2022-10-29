@@ -1,6 +1,8 @@
 import {FC, LegacyRef, MutableRefObject, Ref} from "react";
 import BattleFieldTable from '../BattleFieldTable';
 
+import './battleField.css';
+
 interface IBattleField {
   itemRef?:MutableRefObject<HTMLElement | null>;
   children?: React.ReactNode;

@@ -72,7 +72,8 @@ export const addShoot = (ships: IShip[], shoots: IShoot[], shoot: IShoot) => {
       const y = ship.y + i * dy;
 
       if (shoot.x === x && shoot.y === y) {
-        shoot.state = EShoot.HIT
+        shoot.state = EShoot.HIT;
+        ship.countHitDecks ++;
         return
       }
     }
