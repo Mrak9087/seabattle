@@ -4,15 +4,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import BattleField from '../../components/BattleField';
 import Dock from '../../components/Dock';
 import DraggedShip from '../../components/DraggedShip';
+import Shoot from '../../components/Shoot';
 import { CELL_SIZE } from '../../helpers/constants';
 import { randomizeShips } from '../../helpers/helpers';
-import { IShip, IShipDrop } from '../../helpers/types';
+import { EShoot, IShip, IShipDrop, IShoot } from '../../helpers/types';
+import { shoot } from '../../store/gameStore';
 import { placed, randomPosition, rotate } from '../../store/shipStore';
 import { RootStore } from '../../store/store';
 
 const Editor = () => {
   const refField = useRef<HTMLElement | null>(null);
   const store = useSelector((state: RootStore) => state.shipStore);
+  const game = useSelector((state: RootStore) => state.gameStore);
   const dispatch = useDispatch();
 
   const dockedShip = useMemo(()=>{
@@ -59,6 +62,17 @@ const Editor = () => {
 
   const handleRandom = () => {
     dispatch(randomPosition())
+  }
+
+  const clickCell = (x:number, y:number) => {
+    const id = (game.shootsPlayer.length + 1)  * 10;
+    const newShoot: IShoot = {
+      id,
+      x,
+      y,
+      state:EShoot.MISS
+    }
+    dispatch(shoot(newShoot))
   }
 
   return (

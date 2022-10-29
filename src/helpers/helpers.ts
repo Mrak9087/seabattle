@@ -1,5 +1,5 @@
 import { shipList } from './constants';
-import { IShip } from './types';
+import { EShoot, IShip, IShoot } from './types';
 
 export const isValid = (coord: number): boolean => {
   return coord >= 0 && coord < 10;
@@ -59,4 +59,22 @@ export const randomizeShips = () => {
     }
   }
   return locShips;
+};
+
+export const addShoot = (ships: IShip[], shoots: IShoot[], shoot: IShoot) => {
+  shoots.push(shoot);
+
+  for (let ship of ships) {
+    const dx = ship.dir === 'row' ? 1 : 0;
+    const dy = ship.dir === 'col' ? 1 : 0;
+    for (let i = 0; i < ship.size; i++) {
+      const x = ship.x + i * dx;
+      const y = ship.y + i * dy;
+
+      if (shoot.x === x && shoot.y === y) {
+        shoot.state = EShoot.HIT
+        return
+      }
+    }
+  }
 };

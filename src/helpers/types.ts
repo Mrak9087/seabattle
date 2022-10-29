@@ -12,3 +12,15 @@ export interface IShipDrop {
   x: number;
   y: number;
 }
+
+export enum EShoot {
+  MISS = 'miss',
+  HIT = 'hit'
+}
+
+export interface IShoot {
+  id: number;
+  x: number;
+  y: number;
+  state:EShoot;
+}

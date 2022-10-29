@@ -1,6 +1,15 @@
 import './battleFieldTable.css';
 
-const BattleFieldTable = () => {
+interface IBatttleFieldTable { 
+  handleClick?: (x:number, y:number) => void,
+}
+
+const BattleFieldTable = ({handleClick}:IBatttleFieldTable) => {
+
+  const tdClick = (x:number, y:number) => {
+    if (handleClick) handleClick(x,y)
+  }
+
   return (
     <table className="fieldTable">
       <tbody>
@@ -12,6 +21,7 @@ const BattleFieldTable = () => {
                   <td
                     key={idx}
                     style={{ width: '30px', height: '30px' } as React.CSSProperties}
+                    onClick={() => tdClick(idx,rIdx)}
                   ></td>
                 );
               })}

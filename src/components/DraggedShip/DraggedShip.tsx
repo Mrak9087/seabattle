@@ -27,7 +27,7 @@ const DraggedShip: FC<IDraggedShip> = ({ ship, rotate }) => {
     type: 'ship',
     item: ship,
     collect: (monitor) => ({
-      isDragging: monitor.isDragging,
+      isDragging: monitor.isDragging(),
     }),
   });
 
@@ -36,6 +36,10 @@ const DraggedShip: FC<IDraggedShip> = ({ ship, rotate }) => {
   const handleClick = () => {
     rotate(ship.id);
   };
+
+  if (isDragging) {
+    return <></>
+  }
 
   return (
     <div

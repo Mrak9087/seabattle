@@ -1,9 +1,11 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import shipStore from "./shipStore";
+import gameStore from "./gameStore";
 
 
 const rootReducer = combineReducers({
     shipStore,
+    gameStore,
 })
 
 export const store = configureStore({

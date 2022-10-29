@@ -4,12 +4,13 @@ import BattleFieldTable from '../BattleFieldTable';
 interface IBattleField {
   itemRef?:MutableRefObject<HTMLElement | null>;
   children?: React.ReactNode;
+  handleClick?: (x:number, y:number) => void,
 }
 
-const BattleField:FC<IBattleField> = ({itemRef,children}) => {
+const BattleField:FC<IBattleField> = ({itemRef,children,handleClick}) => {
   return (
     <div className="battleField" ref={itemRef as LegacyRef<HTMLDivElement>}>
-      <BattleFieldTable />
+      <BattleFieldTable handleClick={handleClick} />
       {children}
     </div>
   );
