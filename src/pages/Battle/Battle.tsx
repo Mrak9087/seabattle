@@ -13,7 +13,9 @@ const Battle = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(randomPosition());
+    if (store.shipStore.ships.filter((ship) => !ship.placed).length) {
+      dispatch(randomPosition());
+    }
   }, []);
 
   useEffect(() => {
@@ -21,7 +23,7 @@ const Battle = () => {
   }, [store.shipStore.ships]);
 
   const clickCell = (x: number, y: number) => {
-    const id = (store.gameStore.shootsPlayer.length + 1) * 10;
+    const id = (store.gameStore.shootsBot.length + 1) * 10;
     const newShoot: IShoot = {
       id,
       x,
@@ -36,6 +38,9 @@ const Battle = () => {
       <BattleField>
         {store.shipStore.ships.map((ship) => {
           return <ShipView key={ship.id} ship={ship} />;
+        })}
+        {store.gameStore.shootsPlayer.map((shoot) => {
+          return <Shoot key={shoot.id} shoot={shoot} />;
         })}
       </BattleField>
       <BattleField handleClick={clickCell}>

@@ -16,12 +16,17 @@ export interface IShipDrop {
 
 export enum EShoot {
   MISS = 'miss',
-  HIT = 'hit'
+  HIT = 'hit',
 }
 
 export interface IShoot {
   id: number;
   x: number;
   y: number;
-  state:EShoot;
+  state: EShoot;
+}
+
+export interface ICell {
+  x: number;
+  y: number;
 }

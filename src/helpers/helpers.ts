@@ -1,5 +1,5 @@
 import { shipList } from './constants';
-import { EShoot, IShip, IShoot } from './types';
+import { EShoot, ICell, IShip, IShoot } from './types';
 
 export const isValid = (coord: number): boolean => {
   return coord >= 0 && coord < 10;
@@ -62,7 +62,7 @@ export const randomizeShips = () => {
 };
 
 export const addShoot = (ships: IShip[], shoots: IShoot[], shoot: IShoot) => {
-  shoots.push(shoot);
+  shoots.push(shoot);  
 
   for (let ship of ships) {
     const dx = ship.dir === 'row' ? 1 : 0;
@@ -73,9 +73,53 @@ export const addShoot = (ships: IShip[], shoots: IShoot[], shoot: IShoot) => {
 
       if (shoot.x === x && shoot.y === y) {
         shoot.state = EShoot.HIT;
-        ship.countHitDecks ++;
-        return
+        ship.countHitDecks++;
+        return ship;
       }
     }
   }
+  return null;
+};
+
+export const getFreeCell = (ships: IShip[], shoots: IShoot[]) => {
+  const matrix: number[][] = [];
+  for (let i = 0; i < 10; i++) {
+    const row = new Array(10).fill(0);
+    matrix.push(row);
+  }
+
+  for (const {x,y} of shoots) {
+    matrix[y][x] = 3;
+  }
+
+  ships.forEach((ship) => {
+    const dx = ship.dir === 'row' ? 1 : 0;
+    const dy = ship.dir === 'col' ? 1 : 0;
+
+    if (ship.size === ship.countHitDecks) {
+      for (let y = ship.y - 1; y <= ship.y + ship.size * dy + dx; y++) {
+        if (!isValid(y)) {
+          continue;
+        }
+        for (let x = ship.x - 1; x <= ship.x + ship.size * dx + dy; x++) {
+          if (!isValid(x)) {
+            continue;
+          }
+          matrix[y][x] = 1;
+        }
+      }
+    }
+  });
+
+  const freeCells: ICell[] = [];
+
+  for (let y = 0; y < matrix.length; y++){
+    for (let x = 0; x < matrix.length; x++) {
+      if (matrix[y][x] === 0) {
+        freeCells.push({x, y});
+      }
+    }
+  }
+
+  return freeCells[Math.floor(Math.random() * freeCells.length)];
 };

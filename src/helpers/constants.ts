@@ -12,3 +12,11 @@ export const shipList = [
   { id: 13, x: 5, y: 7, size: 1, dir: 'row', placed: false, countHitDecks:0 },
   { id: 14, x: 7, y: 7, size: 1, dir: 'row', placed: false, countHitDecks:0 },
 ];
+
+
+export const SHOOT_LIST = [
+  {x:-1,y:0},
+  {x:0,y:-1},
+  {x:1,y:0},
+  {x:0,y:1},
+]

@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { addShoot, randomizeShips } from '../helpers/helpers';
-import { IShip, IShoot } from '../helpers/types';
+import { SHOOT_LIST } from '../helpers/constants';
+import { addShoot, getFreeCell, randomizeShips } from '../helpers/helpers';
+import { EShoot, IShip, IShoot } from '../helpers/types';
 
 const initialState = {
   shipsPlayer: [] as IShip[],
@@ -8,6 +9,11 @@ const initialState = {
 
   shipsBot: [] as IShip[],
   shootsBot: [] as IShoot[],
+
+  hitShip: {} as IShip | null,
+
+  shoots: SHOOT_LIST.slice(0),
+  
 };
 
 export const gameStore = createSlice({
@@ -26,7 +32,35 @@ export const gameStore = createSlice({
         return;
       }
       
-      addShoot(state.shipsBot, state.shootsBot, action.payload)
+      addShoot(state.shipsBot, state.shootsBot, action.payload);
+      if (action.payload.state === EShoot.HIT) {
+        return
+      }
+
+      console.log('missed')
+      let isBot = true;
+
+      while (isBot) {
+        isBot = false;
+
+        if (!state.hitShip) {
+          let freeCell = getFreeCell(state.shipsPlayer, state.shootsPlayer);
+  
+          let botShoot: IShoot = {
+            id: 1 + Math.max(0, ...state.shootsPlayer.map((shot) => shot.id)),
+            x: freeCell.x, 
+            y: freeCell.y,
+            state: EShoot.MISS 
+          }
+          state.hitShip = addShoot(state.shipsPlayer, state.shootsPlayer, botShoot);
+          if (botShoot.state === EShoot.HIT) {
+            isBot=true;
+          }
+        } else {
+
+        }
+
+      }
     },
   },
 });
