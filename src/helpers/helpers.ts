@@ -123,3 +123,17 @@ export const getFreeCell = (ships: IShip[], shoots: IShoot[]) => {
 
   return freeCells[Math.floor(Math.random() * freeCells.length)];
 };
+
+export const isEmpty = (obj:Object) => {
+  for (let key in obj) {
+    return false;
+  }
+  return true;
+}
+
+export const isRightShot = (x:number, y:number, ships: IShip[], shoots: IShoot[]) => {
+  if (!isValid(x) || !isValid(y)) {
+    false;
+  }
+  return true
+}
