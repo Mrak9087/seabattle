@@ -8,6 +8,8 @@ import { shoot, start } from '../../store/gameStore';
 import { randomPosition } from '../../store/shipStore';
 import { RootStore } from '../../store/store';
 
+import './battle.css';
+
 const Battle = () => {
   const store = useSelector((state: RootStore) => state);
   const dispatch = useDispatch();
@@ -34,7 +36,7 @@ const Battle = () => {
   };
 
   return (
-    <div className="editor">
+    <div className="battle">
       <BattleField>
         {store.shipStore.ships.map((ship) => {
           return <ShipView key={ship.id} ship={ship} />;

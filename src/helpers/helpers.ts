@@ -131,9 +131,42 @@ export const isEmpty = (obj:Object) => {
   return true;
 }
 
-export const isRightShot = (x:number, y:number, ships: IShip[], shoots: IShoot[]) => {
+export const isCanShoot = (x:number, y:number, ships: IShip[], shoots: IShoot[]) => {
   if (!isValid(x) || !isValid(y)) {
-    false;
+    return false;
   }
+
+  const matrix: number[][] = [];
+  for (let i = 0; i < 10; i++) {
+    const row = new Array(10).fill(0);
+    matrix.push(row);
+  }
+
+  for (const {x,y} of shoots) {
+    matrix[y][x] = 3;
+  }
+
+  const killShips = ships.filter((ship) => ship.size === ship.countHitDecks);
+
+  killShips.forEach((ship) => {
+    const dx = ship.dir === 'row' ? 1 : 0;
+    const dy = ship.dir === 'col' ? 1 : 0;
+    for (let y = ship.y - 1; y <= ship.y + ship.size * dy + dx; y++) {
+      if (!isValid(y)) {
+        continue;
+      }
+      for (let x = ship.x - 1; x <= ship.x + ship.size * dx + dy; x++) {
+        if (!isValid(x)) {
+          continue;
+        }
+        matrix[y][x] = 1;
+      }
+    }
+  });
+
+  if (matrix[y][x] !== 0) {
+    return false;
+  }
+
   return true
 }

@@ -18,6 +18,7 @@ const ShipView = ({ ship }: IShipView) => {
   }, [ship.dir]);
 
   const kill = useMemo(() => {
+    console.log('ship memo', ship.countHitDecks)
     if (ship.size === ship.countHitDecks) return 'kill';
     return '';
   }, [ship.countHitDecks]);
