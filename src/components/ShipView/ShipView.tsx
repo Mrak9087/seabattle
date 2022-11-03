@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { CELL_SIZE } from '../../helpers/constants';
 import { IShip } from '../../helpers/types';
 
@@ -18,7 +18,6 @@ const ShipView = ({ ship }: IShipView) => {
   }, [ship.dir]);
 
   const kill = useMemo(() => {
-    console.log('ship memo', ship.countHitDecks)
     if (ship.size === ship.countHitDecks) return 'kill';
     return '';
   }, [ship.countHitDecks]);

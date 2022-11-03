@@ -38,17 +38,27 @@ const Battle = () => {
   return (
     <div className="battle">
       <BattleField>
-        {store.shipStore.ships.map((ship) => {
+        {store.gameStore.shipsPlayer.map((ship) => {
           return <ShipView key={ship.id} ship={ship} />;
         })}
+
         {store.gameStore.shootsPlayer.map((shoot) => {
           return <Shoot key={shoot.id} shoot={shoot} />;
         })}
       </BattleField>
-      <BattleField handleClick={clickCell}>
-        {store.gameStore.shipsBot.filter((ship) => ship.size === ship.countHitDecks).map((shipV) => {
-          return <ShipView key={shipV.id} ship={shipV}/>;
-        })}
+      <BattleField handleClick={clickCell} isHover={true}>
+        {store.gameStore.shipsBot
+          .filter((ship) => ship.size === ship.countHitDecks)
+          .map((shipV) => {
+            return <ShipView key={shipV.id} ship={shipV} />;
+          })}
+        {!store.gameStore.isPlaying
+          ? store.gameStore.shipsBot
+              .filter((ship) => ship.size !== ship.countHitDecks)
+              .map((shipV) => {
+                return <ShipView key={shipV.id} ship={shipV} />;
+              })
+          : ''}
         {store.gameStore.shootsBot.map((shoot) => {
           return <Shoot key={shoot.id} shoot={shoot} />;
         })}

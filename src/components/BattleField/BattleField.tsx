@@ -7,12 +7,13 @@ interface IBattleField {
   itemRef?:MutableRefObject<HTMLElement | null>;
   children?: React.ReactNode;
   handleClick?: (x:number, y:number) => void,
+  isHover?:boolean;
 }
 
-const BattleField:FC<IBattleField> = ({itemRef,children,handleClick}) => {
+const BattleField:FC<IBattleField> = ({itemRef,children,handleClick,isHover}) => {
   return (
     <div className="battleField" ref={itemRef as LegacyRef<HTMLDivElement>}>
-      <BattleFieldTable handleClick={handleClick} />
+      <BattleFieldTable handleClick={handleClick} isHover={isHover}/>
       {children}
     </div>
   );

@@ -1,4 +1,5 @@
 .fieldTable {
+  position: relative;
   border: 1px solid #000;
   border-collapse: collapse;
 }
@@ -6,4 +7,17 @@
 .fieldTable td {
   border: 1px solid #000;
   background-color: #ccc;
+}
+
+.marker {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+.hovered:hover {
+  background-color: rgba(103, 181, 20, 0.4);
+  cursor: cell;
 }

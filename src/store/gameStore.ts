@@ -53,7 +53,7 @@ export const gameStore = createSlice({
 
       let isBot = true;
 
-      while (isBot) {
+      botLoop:while (isBot) {
         isBot = false;
 
         let botShoot: IShoot | null = null;
@@ -87,6 +87,8 @@ export const gameStore = createSlice({
                 const idx = Math.floor(Math.random() * state.shoots.length);
                 state.selectShoot = state.shoots.splice(idx, 1)[0];
               } else {
+                state.shoots = SHOOT_LIST.slice(0);
+                state.selectShoot = null;
                 console.log('shoot end')
                 break
               }
@@ -106,6 +108,10 @@ export const gameStore = createSlice({
               if (tmpShoot.state === EShoot.MISS){
                 const idx = Math.floor(Math.random() * state.shoots.length);
                 state.selectShoot = state.shoots.splice(idx, 1)[0];
+                if (!state.selectShoot) {
+                  state.shoots = SHOOT_LIST.slice(0);
+                  break botLoop;
+                }
                 locX = state.lastShoot.x; 
                 locY = state.lastShoot.y;
               }
@@ -114,6 +120,7 @@ export const gameStore = createSlice({
                             
               tmpShoot = state.shootsPlayer.find((shoot) => shoot.x === locX && shoot.y === locY)
             }
+
 
             if (!isValid(locX) || !isValid(locY)) {
               state.selectShoot = null;
@@ -152,7 +159,6 @@ export const gameStore = createSlice({
         }
 
         if (state.hitShip && state.hitShip.size === state.hitShip.countHitDecks) {
-          console.log('ship done');
           state.hitShip = null;
           state.lastShoot = null;
           state.selectShoot = null;
