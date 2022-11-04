@@ -38,7 +38,7 @@ const DraggedShip: FC<IDraggedShip> = ({ ship, rotate }) => {
   };
 
   if (isDragging) {
-    return <></>
+    return <></>;
   }
 
   return (
