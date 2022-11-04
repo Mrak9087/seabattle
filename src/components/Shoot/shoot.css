@@ -1,11 +1,11 @@
 .shoot {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 20;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
 }
 
 .hit {
-    color: #a40a0a;
+  color: #a40a0a;
 }

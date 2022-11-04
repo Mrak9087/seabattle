@@ -1,3 +1,3 @@
-import ShipView from "./ShipView";
+import ShipView from './ShipView';
 
 export default ShipView;

@@ -1,3 +1,3 @@
-import DraggedShip from "./DraggedShip";
+import DraggedShip from './DraggedShip';
 
 export default DraggedShip;

@@ -1,3 +1,3 @@
-import Shoot from "./Shoot";
+import Shoot from './Shoot';
 
 export default Shoot;

@@ -1,3 +1,3 @@
-import Dock from "./Dock";
+import Dock from './Dock';
 
 export default Dock;

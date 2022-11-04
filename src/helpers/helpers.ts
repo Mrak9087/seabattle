@@ -62,7 +62,7 @@ export const randomizeShips = () => {
 };
 
 export const addShoot = (ships: IShip[], shoots: IShoot[], shoot: IShoot) => {
-  shoots.push(shoot);  
+  shoots.push(shoot);
 
   for (let ship of ships) {
     const dx = ship.dir === 'row' ? 1 : 0;
@@ -88,7 +88,7 @@ export const getFreeCell = (ships: IShip[], shoots: IShoot[]) => {
     matrix.push(row);
   }
 
-  for (const {x,y} of shoots) {
+  for (const { x, y } of shoots) {
     matrix[y][x] = 3;
   }
 
@@ -113,10 +113,10 @@ export const getFreeCell = (ships: IShip[], shoots: IShoot[]) => {
 
   const freeCells: ICell[] = [];
 
-  for (let y = 0; y < matrix.length; y++){
+  for (let y = 0; y < matrix.length; y++) {
     for (let x = 0; x < matrix.length; x++) {
       if (matrix[y][x] === 0) {
-        freeCells.push({x, y});
+        freeCells.push({ x, y });
       }
     }
   }
@@ -124,14 +124,14 @@ export const getFreeCell = (ships: IShip[], shoots: IShoot[]) => {
   return freeCells[Math.floor(Math.random() * freeCells.length)];
 };
 
-export const isEmpty = (obj:Object) => {
+export const isEmpty = (obj: Object) => {
   for (let key in obj) {
     return false;
   }
   return true;
-}
+};
 
-export const isCanShoot = (x:number, y:number, ships: IShip[], shoots: IShoot[]) => {
+export const isCanShoot = (x: number, y: number, ships: IShip[], shoots: IShoot[]) => {
   if (!isValid(x) || !isValid(y)) {
     return false;
   }
@@ -142,8 +142,10 @@ export const isCanShoot = (x:number, y:number, ships: IShip[], shoots: IShoot[])
     matrix.push(row);
   }
 
-  for (const {x,y} of shoots) {
-    matrix[y][x] = 3;
+  for (const { x, y, state } of shoots) {
+    if (state === EShoot.HIT) {
+      matrix[y][x] = 4;
+    } else matrix[y][x] = 3;
   }
 
   const killShips = ships.filter((ship) => ship.size === ship.countHitDecks);
@@ -168,5 +170,5 @@ export const isCanShoot = (x:number, y:number, ships: IShip[], shoots: IShoot[])
     return false;
   }
 
-  return true
-}
+  return true;
+};

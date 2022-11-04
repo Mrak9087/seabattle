@@ -2,12 +2,13 @@ import { useMemo, useRef } from 'react';
 import { DndProvider, useDrop, XYCoord } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import BattleField from '../../components/BattleField';
 import Dock from '../../components/Dock';
 import DraggedShip from '../../components/DraggedShip';
 import { CELL_SIZE } from '../../helpers/constants';
 import { IShip, IShipDrop } from '../../helpers/types';
-import { placed, randomPosition, rotate } from '../../store/shipStore';
+import { clear, placed, randomPosition, rotate } from '../../store/shipStore';
 import { RootStore } from '../../store/store';
 
 const EditorBlock = () => {
@@ -61,20 +62,36 @@ const EditorBlock = () => {
     dispatch(randomPosition());
   };
 
+  const handleClear = () => {
+    dispatch(clear());
+  };
+
   return (
-      <div className="editorBlock">
-        <BattleField itemRef={refField}>
-          {placedShip.map((ship) => {
-            return <DraggedShip key={ship.id} ship={ship} rotate={shipRotate} />;
-          })}
-        </BattleField>
-        <Dock>
-          {dockedShip.map((ship) => {
-            return <DraggedShip key={ship.id} ship={ship} rotate={shipRotate} />;
-          })}
-        </Dock>
-        <button onClick={handleRandom}>Random</button>
+    <div className="editorBlock">
+      <BattleField itemRef={refField}>
+        {placedShip.map((ship) => {
+          return <DraggedShip key={ship.id} ship={ship} rotate={shipRotate} />;
+        })}
+      </BattleField>
+      <div className="info">Чтобы повернуть корабль щелкините по нему левой кнопкой мыши</div>
+      <Dock>
+        {dockedShip.map((ship) => {
+          return <DraggedShip key={ship.id} ship={ship} rotate={shipRotate} />;
+        })}
+      </Dock>
+
+      <div className="menu">
+        <button onClick={handleRandom} className="itemMenu">
+          Случайно
+        </button>
+        <button onClick={handleClear} className="itemMenu">
+          Сброс
+        </button>
+        <Link to="/battle" className="itemMenu">
+          В бой
+        </Link>
       </div>
+    </div>
   );
 };
 

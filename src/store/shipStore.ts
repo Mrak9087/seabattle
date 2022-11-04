@@ -4,7 +4,7 @@ import { isShipToField, randomizeShips } from '../helpers/helpers';
 import { IShip, IShipDrop } from '../helpers/types';
 
 const initialStateBase = {
-  ships:shipList.slice(0)
+  ships: shipList.slice(0),
 };
 
 export const shipStore = createSlice({
@@ -17,8 +17,8 @@ export const shipStore = createSlice({
       newShip.x = action.payload.x;
       newShip.y = action.payload.y;
       newShip.placed = false;
-      const {x,y,dir} = shipList[shipIdx];
-      const placedShips = state.ships.filter((ship)=> ship.placed)
+      const { x, y, dir } = shipList[shipIdx];
+      const placedShips = state.ships.filter((ship) => ship.placed);
       if (isShipToField(newShip, placedShips)) {
         if (shipIdx > -1) {
           state.ships[shipIdx].x = action.payload.x;
@@ -36,12 +36,12 @@ export const shipStore = createSlice({
       const shipIdx = state.ships.findIndex((item) => item.id === action.payload);
       const newShip = state.ships[shipIdx];
       newShip.dir = newShip.dir === 'row' ? 'col' : 'row';
-      const {x,y,dir} = shipList[shipIdx];
+      const { x, y, dir } = shipList[shipIdx];
       if (newShip.placed) {
         newShip.placed = false;
-        const placedShips = state.ships.filter((ship)=> ship.placed)
+        const placedShips = state.ships.filter((ship) => ship.placed);
         if (isShipToField(newShip, placedShips)) {
-            state.ships[shipIdx].placed = true;
+          state.ships[shipIdx].placed = true;
         } else {
           state.ships[shipIdx].x = x;
           state.ships[shipIdx].y = y;
@@ -49,15 +49,16 @@ export const shipStore = createSlice({
           state.ships[shipIdx].placed = false;
         }
       }
-      
     },
     randomPosition(state) {
       state.ships = randomizeShips();
-    }
+    },
+    clear(state) {
+      state.ships = shipList.slice(0);
+    },
   },
 });
 
-
-export const {placed, rotate, randomPosition} = shipStore.actions
+export const { placed, rotate, randomPosition, clear } = shipStore.actions;
 
 export default shipStore.reducer;

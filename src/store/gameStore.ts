@@ -1,6 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { SHOOT_LIST } from '../helpers/constants';
-import { addShoot, getFreeCell, isCanShoot, isEmpty, isValid, randomizeShips } from '../helpers/helpers';
+import {
+  addShoot,
+  getFreeCell,
+  isCanShoot,
+  isEmpty,
+  isValid,
+  randomizeShips,
+} from '../helpers/helpers';
 import { EShoot, IShip, IShoot, ICell } from '../helpers/types';
 
 const initialState = {
@@ -16,8 +23,8 @@ const initialState = {
   shoots: SHOOT_LIST.slice(0),
   selectShoot: {} as ICell | null,
 
-  isPlaying:true,
-  isPlayerWin:false,
+  isPlaying: true,
+  isPlayerWin: false,
 };
 
 export const gameStore = createSlice({
@@ -25,12 +32,45 @@ export const gameStore = createSlice({
   initialState: initialState,
   reducers: {
     start(state, action: PayloadAction<IShip[]>) {
+      Object.assign(state, {
+        ...initialState,
+        shipsPlayer: action.payload,
+        shipsBot: randomizeShips(),
+        hitShip: null,
+        lastShoot: null,
+
+        shoots: SHOOT_LIST.slice(0),
+        selectShoot: null,
+
+        isPlaying: true,
+        isPlayerWin: false,
+      });
       state.shipsPlayer = action.payload;
       state.shipsBot = randomizeShips();
     },
 
+    restart(state) {
+      Object.assign(state, {
+        ...initialState,
+        shipsPlayer: randomizeShips(),
+        shipsBot: randomizeShips(),
+        hitShip: null,
+        lastShoot: null,
+
+        shoots: SHOOT_LIST.slice(0),
+        selectShoot: null,
+
+        isPlaying: true,
+        isPlayerWin: false,
+      });
+    },
+
+    resign(state) {
+      state.isPlaying = false;
+    },
+
     shoot(state, action: PayloadAction<IShoot>) {
-      if (!state.isPlaying || state.isPlayerWin){
+      if (!state.isPlaying || state.isPlayerWin) {
         return;
       }
       if (
@@ -43,17 +83,16 @@ export const gameStore = createSlice({
 
       addShoot(state.shipsBot, state.shootsBot, action.payload);
       if (action.payload.state === EShoot.HIT) {
-        if (state.shipsBot.every((ship)=> ship.size === ship.countHitDecks)){
+        if (state.shipsBot.every((ship) => ship.size === ship.countHitDecks)) {
           state.isPlayerWin = true;
           state.isPlaying = false;
-          console.log('player win');
         }
         return;
       }
 
       let isBot = true;
 
-      botLoop:while (isBot) {
+      botLoop: while (isBot) {
         isBot = false;
 
         let botShoot: IShoot | null = null;
@@ -89,42 +128,41 @@ export const gameStore = createSlice({
               } else {
                 state.shoots = SHOOT_LIST.slice(0);
                 state.selectShoot = null;
-                console.log('shoot end')
-                break
+                console.log('shoot end');
+                break;
               }
             }
-            let locX = state.lastShoot.x + state.selectShoot.x; 
+            let locX = state.lastShoot.x + state.selectShoot.x;
             let locY = state.lastShoot.y + state.selectShoot.y;
 
             if (!isValid(locX) || !isValid(locY)) {
               state.selectShoot.x *= -1;
               state.selectShoot.y *= -1;
-              locX = state.lastShoot.x + state.selectShoot.x; 
-              locY = state.lastShoot.y + state.selectShoot.y; 
+              locX = state.lastShoot.x + state.selectShoot.x;
+              locY = state.lastShoot.y + state.selectShoot.y;
             }
 
-            let tmpShoot = state.shootsPlayer.find((shoot) => shoot.x === locX && shoot.y === locY)
+            let tmpShoot = state.shootsPlayer.find((shoot) => shoot.x === locX && shoot.y === locY);
             while (tmpShoot) {
-              if (tmpShoot.state === EShoot.MISS){
+              if (tmpShoot.state === EShoot.MISS) {
                 const idx = Math.floor(Math.random() * state.shoots.length);
                 state.selectShoot = state.shoots.splice(idx, 1)[0];
                 if (!state.selectShoot) {
                   state.shoots = SHOOT_LIST.slice(0);
                   break botLoop;
                 }
-                locX = state.lastShoot.x; 
+                locX = state.lastShoot.x;
                 locY = state.lastShoot.y;
               }
               locX += state.selectShoot.x;
               locY += state.selectShoot.y;
-                            
-              tmpShoot = state.shootsPlayer.find((shoot) => shoot.x === locX && shoot.y === locY)
-            }
 
+              tmpShoot = state.shootsPlayer.find((shoot) => shoot.x === locX && shoot.y === locY);
+            }
 
             if (!isValid(locX) || !isValid(locY)) {
               state.selectShoot = null;
-              continue
+              continue;
             }
 
             botShoot = {
@@ -165,15 +203,14 @@ export const gameStore = createSlice({
           state.shoots = SHOOT_LIST.slice(0);
         }
       }
-      if (state.shipsPlayer.every((ship)=> ship.size === ship.countHitDecks)){
+      if (state.shipsPlayer.every((ship) => ship.size === ship.countHitDecks)) {
         state.isPlayerWin = false;
         state.isPlaying = false;
-        console.log('bot win');
       }
     },
   },
 });
 
-export const { start, shoot } = gameStore.actions;
+export const { start, shoot, restart, resign } = gameStore.actions;
 
 export default gameStore.reducer;
