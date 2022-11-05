@@ -131,21 +131,15 @@ export const isEmpty = (obj: Object) => {
   return true;
 };
 
-export const isCanShoot = (x: number, y: number, ships: IShip[], shoots: IShoot[]) => {
+export const canShoot = (x: number, y: number, ships: IShip[], shoots: IShoot[]) => {
   if (!isValid(x) || !isValid(y)) {
-    return false;
+    return -1;
   }
 
   const matrix: number[][] = [];
   for (let i = 0; i < 10; i++) {
     const row = new Array(10).fill(0);
     matrix.push(row);
-  }
-
-  for (const { x, y, state } of shoots) {
-    if (state === EShoot.HIT) {
-      matrix[y][x] = 4;
-    } else matrix[y][x] = 3;
   }
 
   const killShips = ships.filter((ship) => ship.size === ship.countHitDecks);
@@ -161,14 +155,20 @@ export const isCanShoot = (x: number, y: number, ships: IShip[], shoots: IShoot[
         if (!isValid(x)) {
           continue;
         }
-        matrix[y][x] = 1;
+        matrix[y][x] = 4;
       }
     }
   });
 
-  if (matrix[y][x] !== 0) {
-    return false;
+  for (const { x, y, state } of shoots) {
+    if (state === EShoot.HIT) {
+      matrix[y][x] = 3;
+    } else matrix[y][x] = 1;
   }
 
-  return true;
+  // if (matrix[y][x] !== 0) {
+  //   return false;
+  // }
+
+  return matrix[y][x];
 };
