@@ -156,8 +156,9 @@ export const gameStore = createSlice({
                   try {
                     locX += state.selectShoot.x;
                     locY += state.selectShoot.y;
-                  } catch {
+                  } catch (e) {
                     console.log('shoot end 160');
+                    throw e;
                   }
                 }
 
@@ -168,9 +169,10 @@ export const gameStore = createSlice({
                   try {
                     state.selectShoot.x *= -1;
                     state.selectShoot.y *= -1;
-                  } catch {
+                  } catch(e) {
                     console.log(state.selectShoot);
                     console.log('shoot end 173');
+                    throw e;
                   }
                   locX = state.lastShoot.x + state.selectShoot.x;
                   locY = state.lastShoot.y + state.selectShoot.y;
