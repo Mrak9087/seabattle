@@ -1,5 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { SHIP_KILL, SHOOT_HIT, SHOOT_LIST, SHOOT_MISS, SHOOT_OUTSIDE_FIELD } from '../helpers/constants';
+import {
+  SHIP_KILL,
+  SHOOT_HIT,
+  SHOOT_LIST,
+  SHOOT_MISS,
+  SHOOT_OUTSIDE_FIELD,
+} from '../helpers/constants';
 import {
   addShoot,
   canShoot,
@@ -137,37 +143,46 @@ export const gameStore = createSlice({
 
             let tmpShoot = canShoot(locX, locY, state.shipsPlayer, state.shootsPlayer);
             while (tmpShoot !== 0) {
-              if (tmpShoot === SHOOT_HIT) {
-                locX += state.selectShoot.x;
-                locY += state.selectShoot.y;
-              }
-              if (tmpShoot === SHIP_KILL || tmpShoot === SHOOT_MISS) {
-                locX -= state.selectShoot.x;
-                locY -= state.selectShoot.y;
-                const idx = Math.floor(Math.random() * state.shoots.length);
-                state.selectShoot = state.shoots.splice(idx, 1)[0];
-                locX += state.selectShoot.x;
-                locY += state.selectShoot.y;
-              }
-
-              if (canShoot(locX, locY, state.shipsPlayer, state.shootsPlayer) === SHOOT_OUTSIDE_FIELD) {
-                if (!state.selectShoot || isEmpty(state.selectShoot)) {
-                  state.shoots = SHOOT_LIST.slice(0);
-                  state.selectShoot = null;
-                  console.log('shoot end 157');
-                  continue botLoop;
+              try {
+                if (tmpShoot === SHOOT_HIT) {
+                  locX += state.selectShoot.x;
+                  locY += state.selectShoot.y;
                 }
-                try {
-                  state.selectShoot.x *= -1;
-                  state.selectShoot.y *= -1;
-                } catch {
-                  console.log(state.selectShoot);
+                if (tmpShoot === SHIP_KILL || tmpShoot === SHOOT_MISS) {
+                  locX -= state.selectShoot.x;
+                  locY -= state.selectShoot.y;
+                  const idx = Math.floor(Math.random() * state.shoots.length);
+                  state.selectShoot = state.shoots.splice(idx, 1)[0];
+                  try {
+                    locX += state.selectShoot.x;
+                    locY += state.selectShoot.y;
+                  } catch {
+                    console.log('shoot end 160');
+                  }
                 }
-                locX = state.lastShoot.x + state.selectShoot.x;
-                locY = state.lastShoot.y + state.selectShoot.y;
-              }
 
-              tmpShoot = canShoot(locX, locY, state.shipsPlayer, state.shootsPlayer);
+                if (
+                  canShoot(locX, locY, state.shipsPlayer, state.shootsPlayer) ===
+                  SHOOT_OUTSIDE_FIELD
+                ) {
+                  try {
+                    state.selectShoot.x *= -1;
+                    state.selectShoot.y *= -1;
+                  } catch {
+                    console.log(state.selectShoot);
+                    console.log('shoot end 173');
+                  }
+                  locX = state.lastShoot.x + state.selectShoot.x;
+                  locY = state.lastShoot.y + state.selectShoot.y;
+                }
+
+                tmpShoot = canShoot(locX, locY, state.shipsPlayer, state.shootsPlayer);
+              } catch {
+                state.shoots = SHOOT_LIST.slice(0);
+                state.selectShoot = null;
+                console.log('shoot end 183');
+                continue botLoop;
+              }
             }
 
             if (!isValid(locX) || !isValid(locY)) {
