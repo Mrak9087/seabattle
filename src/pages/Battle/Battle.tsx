@@ -27,12 +27,12 @@ const Battle = () => {
 
   const message = useMemo(() => {
     if (store.gameStore.isPlaying) {
-      return <div>Ваш ход</div>;
+      return <div className="text-message">Битва началась</div>;
     } else {
       if (store.gameStore.isPlayerWin) {
-        return <div>Вы победили</div>;
+        return <div className="text-message">Вы победили</div>;
       } else {
-        return <div>Бот победил</div>;
+        return <div className="text-message">Бот победил</div>;
       }
     }
   }, [store.gameStore.isPlaying, store.gameStore.isPlayerWin]);

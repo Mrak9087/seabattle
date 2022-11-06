@@ -1,4 +1,4 @@
-import { shipList } from './constants';
+import { shipList, SHIP_KILL, SHOOT_HIT, SHOOT_MISS, SHOOT_OUTSIDE_FIELD } from './constants';
 import { EShoot, ICell, IShip, IShoot } from './types';
 
 export const isValid = (coord: number): boolean => {
@@ -133,7 +133,7 @@ export const isEmpty = (obj: Object) => {
 
 export const canShoot = (x: number, y: number, ships: IShip[], shoots: IShoot[]) => {
   if (!isValid(x) || !isValid(y)) {
-    return -1;
+    return SHOOT_OUTSIDE_FIELD;
   }
 
   const matrix: number[][] = [];
@@ -155,20 +155,16 @@ export const canShoot = (x: number, y: number, ships: IShip[], shoots: IShoot[])
         if (!isValid(x)) {
           continue;
         }
-        matrix[y][x] = 4;
+        matrix[y][x] = SHIP_KILL;
       }
     }
   });
 
   for (const { x, y, state } of shoots) {
     if (state === EShoot.HIT) {
-      matrix[y][x] = 3;
-    } else matrix[y][x] = 1;
+      matrix[y][x] = SHOOT_HIT;
+    } else matrix[y][x] = SHOOT_MISS;
   }
-
-  // if (matrix[y][x] !== 0) {
-  //   return false;
-  // }
 
   return matrix[y][x];
 };

@@ -1,4 +1,8 @@
 export const CELL_SIZE = 30;
+export const SHOOT_OUTSIDE_FIELD = -1;
+export const SHOOT_MISS = 1;
+export const SHOOT_HIT = 3;
+export const SHIP_KILL = 4;
 
 export const shipList = [
   { id: 41, x: 1, y: 1, size: 4, dir: 'row', placed: false, countHitDecks: 0 },
