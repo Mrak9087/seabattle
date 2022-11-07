@@ -141,6 +141,9 @@ export const gameStore = createSlice({
             let locX = state.lastShoot.x + state.selectShoot.x;
             let locY = state.lastShoot.y + state.selectShoot.y;
 
+            // console.log([state.lastShoot.x+1,state.lastShoot.y+1])
+            // console.log([state.selectShoot.x,state.selectShoot.y])
+            
             let tmpShoot = canShoot(locX, locY, state.shipsPlayer, state.shootsPlayer);
             while (tmpShoot !== 0) {
               try {
@@ -149,47 +152,33 @@ export const gameStore = createSlice({
                   locY += state.selectShoot.y;
                 }
                 if (tmpShoot === SHIP_KILL || tmpShoot === SHOOT_MISS) {
-                  locX -= state.selectShoot.x;
-                  locY -= state.selectShoot.y;
-                  const idx = Math.floor(Math.random() * state.shoots.length);
-                  state.selectShoot = state.shoots.splice(idx, 1)[0];
-                  try {
-                    locX += state.selectShoot.x;
-                    locY += state.selectShoot.y;
-                  } catch (e) {
-                    console.log('shoot end 160');
-                    throw e;
-                  }
-                }
-
-                if (
-                  canShoot(locX, locY, state.shipsPlayer, state.shootsPlayer) ===
-                  SHOOT_OUTSIDE_FIELD
-                ) {
-                  try {
+                  isBot = true;
+                  if (state.hitShip.countHitDecks > 1) {
                     state.selectShoot.x *= -1;
                     state.selectShoot.y *= -1;
-                  } catch(e) {
-                    console.log(state.selectShoot);
-                    console.log('shoot end 173');
-                    throw e;
+                  } else {
+                    state.selectShoot = null;
                   }
+                  // console.log('continue');
+                  continue botLoop;
+                }
+
+                if (tmpShoot === SHOOT_OUTSIDE_FIELD) {
+                  state.selectShoot.x *= -1;
+                  state.selectShoot.y *= -1;
+
                   locX = state.lastShoot.x + state.selectShoot.x;
                   locY = state.lastShoot.y + state.selectShoot.y;
                 }
 
                 tmpShoot = canShoot(locX, locY, state.shipsPlayer, state.shootsPlayer);
               } catch {
+                isBot = true;
                 state.shoots = SHOOT_LIST.slice(0);
                 state.selectShoot = null;
                 console.log('shoot end 183');
                 continue botLoop;
               }
-            }
-
-            if (!isValid(locX) || !isValid(locY)) {
-              state.selectShoot = null;
-              continue;
             }
 
             botShoot = {
