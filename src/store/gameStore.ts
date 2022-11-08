@@ -11,7 +11,6 @@ import {
   canShoot,
   getFreeCell,
   isEmpty,
-  isValid,
   randomizeShips,
 } from '../helpers/helpers';
 import { EShoot, IShip, IShoot, ICell } from '../helpers/types';
@@ -143,7 +142,7 @@ export const gameStore = createSlice({
 
             // console.log([state.lastShoot.x+1,state.lastShoot.y+1])
             // console.log([state.selectShoot.x,state.selectShoot.y])
-            
+
             let tmpShoot = canShoot(locX, locY, state.shipsPlayer, state.shootsPlayer);
             while (tmpShoot !== 0) {
               try {
@@ -158,25 +157,36 @@ export const gameStore = createSlice({
                     state.selectShoot.y *= -1;
                   } else {
                     state.selectShoot = null;
+                    if (!state.shoots.length) {
+                      state.shoots = SHOOT_LIST.slice(0);
+                    }
                   }
                   // console.log('continue');
                   continue botLoop;
                 }
 
                 if (tmpShoot === SHOOT_OUTSIDE_FIELD) {
-                  state.selectShoot.x *= -1;
-                  state.selectShoot.y *= -1;
+                  // state.selectShoot.x *= -1;
+                  // state.selectShoot.y *= -1;
+                  state.selectShoot = {
+                    ...state.selectShoot,
+                    x: -1 * state.selectShoot.x,
+                    y: -1 * state.selectShoot.y,
+                  };
 
                   locX = state.lastShoot.x + state.selectShoot.x;
                   locY = state.lastShoot.y + state.selectShoot.y;
                 }
 
                 tmpShoot = canShoot(locX, locY, state.shipsPlayer, state.shootsPlayer);
-              } catch {
+              } catch (e) {
                 isBot = true;
+                console.log('shoot end 183');
+                console.log(state.selectShoot);
+                console.log(state.lastShoot);
+                console.log(e);
                 state.shoots = SHOOT_LIST.slice(0);
                 state.selectShoot = null;
-                console.log('shoot end 183');
                 continue botLoop;
               }
             }
@@ -213,6 +223,7 @@ export const gameStore = createSlice({
         }
 
         if (state.hitShip && state.hitShip.size === state.hitShip.countHitDecks) {
+          isBot = true;
           state.hitShip = null;
           state.lastShoot = null;
           state.selectShoot = null;
