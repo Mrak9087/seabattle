@@ -153,8 +153,8 @@ export const gameStore = createSlice({
                 if (tmpShoot === SHIP_KILL || tmpShoot === SHOOT_MISS) {
                   isBot = true;
                   if (state.hitShip.countHitDecks > 1) {
-                    state.selectShoot.x *= -1;
-                    state.selectShoot.y *= -1;
+                    state.selectShoot.x = state.selectShoot.x * -1;
+                    state.selectShoot.y = state.selectShoot.y * -1;
                   } else {
                     state.selectShoot = null;
                     if (!state.shoots.length) {
@@ -168,11 +168,13 @@ export const gameStore = createSlice({
                 if (tmpShoot === SHOOT_OUTSIDE_FIELD) {
                   // state.selectShoot.x *= -1;
                   // state.selectShoot.y *= -1;
-                  state.selectShoot = {
-                    ...state.selectShoot,
-                    x: -1 * state.selectShoot.x,
-                    y: -1 * state.selectShoot.y,
-                  };
+                  // state.selectShoot = {
+                  //   ...state.selectShoot,
+                  //   x: -1 * state.selectShoot.x,
+                  //   y: -1 * state.selectShoot.y,
+                  // };
+                  state.selectShoot.x = state.selectShoot.x * -1;
+                  state.selectShoot.y = state.selectShoot.y * -1;
 
                   locX = state.lastShoot.x + state.selectShoot.x;
                   locY = state.lastShoot.y + state.selectShoot.y;
