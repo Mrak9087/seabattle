@@ -26,7 +26,7 @@ const initialState = {
   lastShoot: {} as IShoot | null,
 
   shoots: SHOOT_LIST.slice(0),
-  selectShoot: {} as ICell | null,
+  directionShoot: {} as ICell | null,
 
   isPlaying: true,
   isPlayerWin: false,
@@ -45,7 +45,7 @@ export const gameStore = createSlice({
         lastShoot: null,
 
         shoots: SHOOT_LIST.slice(0),
-        selectShoot: null,
+        directionShoot: null,
 
         isPlaying: true,
         isPlayerWin: false,
@@ -63,7 +63,7 @@ export const gameStore = createSlice({
         lastShoot: null,
 
         shoots: SHOOT_LIST.slice(0),
-        selectShoot: null,
+        directionShoot: null,
 
         isPlaying: true,
         isPlayerWin: false,
@@ -126,37 +126,42 @@ export const gameStore = createSlice({
           }
         } else {
           if (state.lastShoot && !isEmpty(state.lastShoot)) {
-            if (!state.selectShoot || isEmpty(state.selectShoot)) {
+            if (!state.directionShoot || isEmpty(state.directionShoot)) {
               if (state.shoots.length) {
                 const idx = Math.floor(Math.random() * state.shoots.length);
-                state.selectShoot = state.shoots.splice(idx, 1)[0];
+                state.directionShoot = state.shoots.splice(idx, 1)[0];
               } else {
                 state.shoots = SHOOT_LIST.slice(0);
-                state.selectShoot = null;
+                state.directionShoot = null;
                 console.log('shoot end 131');
                 continue botLoop;
               }
             }
-            let locX = state.lastShoot.x + state.selectShoot.x;
-            let locY = state.lastShoot.y + state.selectShoot.y;
+            let locX = state.lastShoot.x + state.directionShoot.x;
+            let locY = state.lastShoot.y + state.directionShoot.y;
 
             // console.log([state.lastShoot.x+1,state.lastShoot.y+1])
-            // console.log([state.selectShoot.x,state.selectShoot.y])
+            // console.log([state.directionShoot.x,state.directionShoot.y])
 
             let tmpShoot = canShoot(locX, locY, state.shipsPlayer, state.shootsPlayer);
             while (tmpShoot !== 0) {
               try {
                 if (tmpShoot === SHOOT_HIT) {
-                  locX += state.selectShoot.x;
-                  locY += state.selectShoot.y;
+                  locX += state.directionShoot.x;
+                  locY += state.directionShoot.y;
                 }
                 if (tmpShoot === SHIP_KILL || tmpShoot === SHOOT_MISS) {
                   isBot = true;
                   if (state.hitShip.countHitDecks > 1) {
-                    state.selectShoot.x = state.selectShoot.x * -1;
-                    state.selectShoot.y = state.selectShoot.y * -1;
+                    // state.directionShoot.x = state.directionShoot.x * -1;
+                    // state.directionShoot.y = state.directionShoot.y * -1;
+                    state.directionShoot = {
+                      ...state.directionShoot,
+                      x: -1 * state.directionShoot.x,
+                      y: -1 * state.directionShoot.y,
+                    };
                   } else {
-                    state.selectShoot = null;
+                    state.directionShoot = null;
                     if (!state.shoots.length) {
                       state.shoots = SHOOT_LIST.slice(0);
                     }
@@ -166,29 +171,29 @@ export const gameStore = createSlice({
                 }
 
                 if (tmpShoot === SHOOT_OUTSIDE_FIELD) {
-                  // state.selectShoot.x *= -1;
-                  // state.selectShoot.y *= -1;
-                  // state.selectShoot = {
-                  //   ...state.selectShoot,
-                  //   x: -1 * state.selectShoot.x,
-                  //   y: -1 * state.selectShoot.y,
-                  // };
-                  state.selectShoot.x = state.selectShoot.x * -1;
-                  state.selectShoot.y = state.selectShoot.y * -1;
+                  // state.directionShoot.x *= -1;
+                  // state.directionShoot.y *= -1;
+                  state.directionShoot = {
+                    ...state.directionShoot,
+                    x: -1 * state.directionShoot.x,
+                    y: -1 * state.directionShoot.y,
+                  };
+                  // state.directionShoot.x = state.directionShoot.x * -1;
+                  // state.directionShoot.y = state.directionShoot.y * -1;
 
-                  locX = state.lastShoot.x + state.selectShoot.x;
-                  locY = state.lastShoot.y + state.selectShoot.y;
+                  locX = state.lastShoot.x + state.directionShoot.x;
+                  locY = state.lastShoot.y + state.directionShoot.y;
                 }
 
                 tmpShoot = canShoot(locX, locY, state.shipsPlayer, state.shootsPlayer);
               } catch (e) {
                 isBot = true;
                 console.log('shoot end 183');
-                console.log(state.selectShoot);
+                console.log(state.directionShoot);
                 console.log(state.lastShoot);
                 console.log(e);
                 state.shoots = SHOOT_LIST.slice(0);
-                state.selectShoot = null;
+                state.directionShoot = null;
                 continue botLoop;
               }
             }
@@ -208,13 +213,13 @@ export const gameStore = createSlice({
 
             if (botShoot && botShoot.state === EShoot.MISS) {
               if (state.hitShip && state.hitShip.countHitDecks > 1) {
-                if (state.selectShoot.x) {
+                if (state.directionShoot.x) {
                   state.shoots = state.shoots.filter((shoot) => shoot.x);
                 } else {
                   state.shoots = state.shoots.filter((shoot) => shoot.y);
                 }
               }
-              state.selectShoot = null;
+              state.directionShoot = null;
             }
           }
         }
@@ -228,7 +233,7 @@ export const gameStore = createSlice({
           isBot = true;
           state.hitShip = null;
           state.lastShoot = null;
-          state.selectShoot = null;
+          state.directionShoot = null;
           state.shoots = SHOOT_LIST.slice(0);
         }
 
