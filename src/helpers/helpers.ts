@@ -1,16 +1,21 @@
 import { shipList, SHIP_KILL, SHOOT_HIT, SHOOT_MISS, SHOOT_OUTSIDE_FIELD } from './constants';
 import { EShoot, ICell, IShip, IShoot } from './types';
 
-export const isValid = (coord: number): boolean => {
-  return coord >= 0 && coord < 10;
-};
-
-export const isShipToField = (newShip: IShip, ships: IShip[]): boolean => {
+function getEmptyMatrix() {
   const matrix: number[][] = [];
   for (let i = 0; i < 10; i++) {
     const row = new Array(10).fill(0);
     matrix.push(row);
   }
+  return matrix;
+}
+
+export const isValid = (coord: number): boolean => {
+  return coord >= 0 && coord < 10;
+};
+
+export const isShipToField = (newShip: IShip, ships: IShip[]): boolean => {
+  const matrix: number[][] = getEmptyMatrix();
 
   ships.forEach((ship) => {
     const dx = ship.dir === 'row' ? 1 : 0;
@@ -82,11 +87,7 @@ export const addShoot = (ships: IShip[], shoots: IShoot[], shoot: IShoot) => {
 };
 
 export const getFreeCell = (ships: IShip[], shoots: IShoot[]) => {
-  const matrix: number[][] = [];
-  for (let i = 0; i < 10; i++) {
-    const row = new Array(10).fill(0);
-    matrix.push(row);
-  }
+  const matrix: number[][] = getEmptyMatrix();
 
   for (const { x, y } of shoots) {
     matrix[y][x] = 3;
@@ -121,8 +122,51 @@ export const getFreeCell = (ships: IShip[], shoots: IShoot[]) => {
     }
   }
 
-  return freeCells[Math.floor(Math.random() * freeCells.length)];
+  let idx = Math.floor(Math.random() * freeCells.length);
+  let freeCell = freeCells[idx];
+
+  const liveShips = ships.filter((ship) => !ship.countHitDecks);
+
+  if (liveShips.length <= 3) {
+    let isLoop = true;
+
+    liveShips.sort((a,b) => b.size - a.size);
+
+    console.log([...liveShips]);
+
+    while (isLoop) {
+      isLoop = false;
+      let countLeftX = countCell(matrix, freeCell, liveShips[0].size, {x:-1, y:0});
+      let countRightX = countCell(matrix, freeCell, liveShips[0].size, {x:1, y:0});
+      let countTopY = countCell(matrix, freeCell, liveShips[0].size, {x:0, y:-1});
+      let countBottomY = countCell(matrix, freeCell, liveShips[0].size, {x:0, y:1});
+      if (countLeftX + countRightX >= liveShips[0].size || countTopY + countBottomY >= liveShips[0].size){
+        return freeCell;
+      } else {
+        isLoop = true;
+        
+        freeCells.splice(idx, 1);
+        idx = Math.floor(Math.random() * freeCells.length);
+        freeCell = freeCells[idx];
+      }
+    }
+  }
+
+  return freeCell;
 };
+
+const countCell = (matrix:number[][], cell:ICell, size:number, direction:ICell ) => {
+  let countEmptyCell = 1;
+  for (let i = 1; i < size; i++) {
+    let locX = cell.x + i * direction.x;
+    let locY = cell.y + i * direction.y;
+    if (!isValid(locX) || !isValid(locY)) break;
+    if (matrix[locY][locX] === 0) {
+      countEmptyCell ++;
+    } else break;
+  }
+  return countEmptyCell
+}
 
 export const isEmpty = (obj: Object) => {
   for (let key in obj) {
@@ -136,11 +180,7 @@ export const canShoot = (x: number, y: number, ships: IShip[], shoots: IShoot[])
     return SHOOT_OUTSIDE_FIELD;
   }
 
-  const matrix: number[][] = [];
-  for (let i = 0; i < 10; i++) {
-    const row = new Array(10).fill(0);
-    matrix.push(row);
-  }
+  const matrix: number[][] = getEmptyMatrix();
 
   const killShips = ships.filter((ship) => ship.size === ship.countHitDecks);
 

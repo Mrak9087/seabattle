@@ -140,9 +140,6 @@ export const gameStore = createSlice({
             let locX = state.lastShoot.x + state.directionShoot.x;
             let locY = state.lastShoot.y + state.directionShoot.y;
 
-            // console.log([state.lastShoot.x+1,state.lastShoot.y+1])
-            // console.log([state.directionShoot.x,state.directionShoot.y])
-
             let tmpShoot = canShoot(locX, locY, state.shipsPlayer, state.shootsPlayer);
             while (tmpShoot !== 0) {
               try {
@@ -153,8 +150,6 @@ export const gameStore = createSlice({
                 if (tmpShoot === SHIP_KILL || tmpShoot === SHOOT_MISS) {
                   isBot = true;
                   if (state.hitShip.countHitDecks > 1) {
-                    // state.directionShoot.x = state.directionShoot.x * -1;
-                    // state.directionShoot.y = state.directionShoot.y * -1;
                     state.directionShoot = {
                       ...state.directionShoot,
                       x: -1 * state.directionShoot.x,
@@ -166,20 +161,15 @@ export const gameStore = createSlice({
                       state.shoots = SHOOT_LIST.slice(0);
                     }
                   }
-                  // console.log('continue');
                   continue botLoop;
                 }
 
                 if (tmpShoot === SHOOT_OUTSIDE_FIELD) {
-                  // state.directionShoot.x *= -1;
-                  // state.directionShoot.y *= -1;
                   state.directionShoot = {
                     ...state.directionShoot,
                     x: -1 * state.directionShoot.x,
                     y: -1 * state.directionShoot.y,
                   };
-                  // state.directionShoot.x = state.directionShoot.x * -1;
-                  // state.directionShoot.y = state.directionShoot.y * -1;
 
                   locX = state.lastShoot.x + state.directionShoot.x;
                   locY = state.lastShoot.y + state.directionShoot.y;
