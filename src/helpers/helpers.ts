@@ -132,8 +132,6 @@ export const getFreeCell = (ships: IShip[], shoots: IShoot[]) => {
 
     liveShips.sort((a,b) => b.size - a.size);
 
-    console.log([...liveShips]);
-
     while (isLoop) {
       isLoop = false;
       let countLeftX = countCell(matrix, freeCell, liveShips[0].size, {x:-1, y:0});
