@@ -130,15 +130,19 @@ export const getFreeCell = (ships: IShip[], shoots: IShoot[]) => {
   if (liveShips.length <= 3) {
     let isLoop = true;
 
-    liveShips.sort((a,b) => b.size - a.size);
+    const arrSizes =  liveShips.map((ship)=>{
+      return ship.size;
+    })
+
+    const maxSize = Math.max(...arrSizes);
 
     while (isLoop) {
       isLoop = false;
-      let countLeftX = countCell(matrix, freeCell, liveShips[0].size, {x:-1, y:0});
-      let countRightX = countCell(matrix, freeCell, liveShips[0].size, {x:1, y:0});
-      let countTopY = countCell(matrix, freeCell, liveShips[0].size, {x:0, y:-1});
-      let countBottomY = countCell(matrix, freeCell, liveShips[0].size, {x:0, y:1});
-      if (countLeftX + countRightX >= liveShips[0].size || countTopY + countBottomY >= liveShips[0].size){
+      let countLeftX = countEmptyCell(matrix, freeCell, maxSize, {x:-1, y:0});
+      let countRightX = countEmptyCell(matrix, freeCell, maxSize, {x:1, y:0});
+      let countTopY = countEmptyCell(matrix, freeCell, maxSize, {x:0, y:-1});
+      let countBottomY = countEmptyCell(matrix, freeCell, maxSize, {x:0, y:1});
+      if ((countLeftX + countRightX - 1) >= maxSize || (countTopY + countBottomY - 1) >= maxSize){
         return freeCell;
       } else {
         isLoop = true;
@@ -153,9 +157,9 @@ export const getFreeCell = (ships: IShip[], shoots: IShoot[]) => {
   return freeCell;
 };
 
-const countCell = (matrix:number[][], cell:ICell, size:number, direction:ICell ) => {
-  let countEmptyCell = 1;
-  for (let i = 1; i < size; i++) {
+export const countEmptyCell = (matrix:number[][], cell:ICell, size:number, direction:ICell ) => {
+  let countEmptyCell = 0;
+  for (let i = 0; i < size; i++) {
     let locX = cell.x + i * direction.x;
     let locY = cell.y + i * direction.y;
     if (!isValid(locX) || !isValid(locY)) break;
